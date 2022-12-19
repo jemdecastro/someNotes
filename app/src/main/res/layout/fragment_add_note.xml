@@ -56,10 +56,11 @@
             android:layout_marginHorizontal="@dimen/margin_between_elements"
             android:text="@string/last_update"
             android:textSize="11sp"
-            app:layout_constraintHorizontal_weight="1"
+            app:layout_constraintHorizontal_weight="3"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toStartOf="@+id/note_update_at"
             android:textAlignment="textEnd"
+            android:visibility="gone"
             app:layout_constraintTop_toBottomOf="@+id/note_text_label" />
 
         <TextView
@@ -69,10 +70,11 @@
             android:layout_marginHorizontal="@dimen/margin_between_elements"
             android:text="@string/last_update"
             android:textSize="11sp"
-            app:layout_constraintHorizontal_weight="1"
+            app:layout_constraintHorizontal_weight="4"
             app:layout_constraintStart_toEndOf="@+id/note_update_at_label"
             app:layout_constraintEnd_toEndOf="parent"
             android:textAlignment="textStart"
+            android:visibility="gone"
             app:layout_constraintTop_toBottomOf="@+id/note_text_label" />
 
         <com.google.android.material.floatingactionbutton.FloatingActionButton

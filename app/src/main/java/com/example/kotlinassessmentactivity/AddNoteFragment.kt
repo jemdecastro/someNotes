@@ -73,6 +73,7 @@ class AddNoteFragment : Fragment() {
             floatingDeleteButton.visibility = VISIBLE
             floatingDeleteButton.setOnClickListener { showConfirmationDialog() }
 
+            noteUpdateAtLabel.visibility = VISIBLE
             noteUpdateAt.visibility = VISIBLE
             noteUpdateAt.text = note.getDateTime()
 
