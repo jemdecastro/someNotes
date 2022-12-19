@@ -1,6 +1,7 @@
 package com.example.kotlinassessmentactivity
 
 import android.view.LayoutInflater
+import android.view.View.GONE
 import android.view.ViewGroup
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
@@ -38,6 +39,12 @@ class NoteListAdapter(private val onNoteClicked: (Note) -> Unit) :
         RecyclerView.ViewHolder(binding.root) {
 
         fun bind(note: Note) {
+            if(note.noteTitle.isEmpty())
+                binding.noteTitle.visibility = GONE
+
+            if(note.noteText.isEmpty())
+                binding.noteText.visibility = GONE
+
             binding.noteTitle.text = note.noteTitle
             binding.noteText.text = note.noteText
             binding.noteUpdateAt.text = note.getDateTime()

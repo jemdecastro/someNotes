@@ -7,7 +7,7 @@ import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.navigation.fragment.findNavController
-import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.GridLayoutManager
 import com.example.kotlinassessmentactivity.databinding.NoteListFragmentBinding
 
 /**
@@ -36,11 +36,19 @@ class NoteListFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
 
         val adapter = NoteListAdapter {
-            val action =
-                NoteListFragmentDirections.actionNoteListFragmentToNoteDetailFragment(it.id)
+            val action = NoteListFragmentDirections.actionNoteListFragmentToAddNoteFragment(
+                getString(R.string.edit_fragment_title),
+                it.id
+            )
             this.findNavController().navigate(action)
+//
+//            val action = NoteListFragmentDirections.actionNoteListFragmentToNoteDetailFragment(
+//                it.id
+//            )
+//            this.findNavController().navigate(action)
         }
-        binding.recyclerView.layoutManager = LinearLayoutManager(this.context)
+        binding.recyclerView.layoutManager = GridLayoutManager(this.context, 2)
+
         binding.recyclerView.adapter = adapter
         // Attach an observer on the allItems list to update the UI automatically when the data
         // changes.

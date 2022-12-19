@@ -4,15 +4,21 @@ import android.content.Context.INPUT_METHOD_SERVICE
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
+import android.view.View.VISIBLE
 import android.view.ViewGroup
 import android.view.inputmethod.InputMethodManager
+import android.view.inputmethod.InputMethodManager.SHOW_FORCED
+import android.view.inputmethod.InputMethodManager.SHOW_IMPLICIT
 import android.widget.TextView
+import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import com.example.kotlinassessmentactivity.data.Note
+import com.example.kotlinassessmentactivity.data.getDateTime
 import com.example.kotlinassessmentactivity.databinding.FragmentAddNoteBinding
+import com.google.android.material.dialog.MaterialAlertDialogBuilder
 
 /**
  * Fragment to add or update an Note in the Note database.
@@ -26,7 +32,7 @@ class AddNoteFragment : Fragment() {
             (activity?.application as NoteApplication).database.noteDao()
         )
     }
-    private val navigationArgs: NoteDetailFragmentArgs by navArgs()
+    private val navigationArgs: NoteListFragmentArgs by navArgs()
 
     lateinit var note: Note
 
@@ -63,7 +69,14 @@ class AddNoteFragment : Fragment() {
         binding.apply {
             noteTitle.setText(note.noteTitle, TextView.BufferType.SPANNABLE)
             noteText.setText(note.noteText, TextView.BufferType.SPANNABLE)
-            saveAction.setOnClickListener { updateNote() }
+//            saveAction.setOnClickListener { updateNote() }
+            floatingDeleteButton.visibility = VISIBLE
+            floatingDeleteButton.setOnClickListener { showConfirmationDialog() }
+
+            noteUpdateAt.visibility = VISIBLE
+            noteUpdateAt.text = note.getDateTime()
+
+            noteText.setSelection(noteText.length())
         }
     }
 
@@ -73,13 +86,16 @@ class AddNoteFragment : Fragment() {
     private fun addNewNote() {
         if (isEntryValid()) {
             viewModel.addNewNote(
-                binding.noteTitle.text.toString(),
-                binding.noteText.text.toString(),
+                this.binding.noteTitle.text.toString(),
+                this.binding.noteText.text.toString(),
                 System.currentTimeMillis(),
             )
-            val action = AddNoteFragmentDirections.actionAddNoteFragmentToNoteListFragment()
-            findNavController().navigate(action)
+        } else {
+            Toast.makeText(context,"Empty Note discarded",Toast.LENGTH_SHORT).show()
         }
+
+//        val action = AddNoteFragmentDirections.actionAddNoteFragmentToNoteListFragment()
+//        findNavController().navigate(action)
     }
 
     /**
@@ -87,15 +103,48 @@ class AddNoteFragment : Fragment() {
      */
     private fun updateNote() {
         if (isEntryValid()) {
-            viewModel.updateNote(
-                this.navigationArgs.noteId,
-                this.binding.noteTitle.text.toString(),
-                this.binding.noteText.text.toString(),
-                System.currentTimeMillis(),
-            )
-            val action = AddNoteFragmentDirections.actionAddNoteFragmentToNoteListFragment()
-            findNavController().navigate(action)
+            // Check if there are changes from title or text
+            if( note.noteTitle == binding.noteTitle.text.toString() &&
+                note.noteText == binding.noteText.text.toString() ) {
+//                Toast.makeText(context,"No changes made",Toast.LENGTH_SHORT).show()
+            } else {
+                viewModel.updateNote(
+                    note.id,
+                    binding.noteTitle.text.toString(),
+                    binding.noteText.text.toString(),
+                    System.currentTimeMillis(),
+                )
+            }
+        } else {
+            viewModel.deleteNote(note)
+            Toast.makeText(context,"Empty Note discarded",Toast.LENGTH_SHORT).show()
         }
+
+//        val action = AddNoteFragmentDirections.actionAddNoteFragmentToNoteListFragment()
+//        findNavController().navigate(action)
+    }
+
+    /**
+     * Displays an alert dialog to get the user's confirmation before deleting the note.
+     */
+    private fun showConfirmationDialog() {
+        MaterialAlertDialogBuilder(requireContext())
+            .setTitle(getString(android.R.string.dialog_alert_title))
+            .setMessage(getString(R.string.delete_question))
+            .setCancelable(false)
+            .setNegativeButton(getString(R.string.no)) { _, _ -> }
+            .setPositiveButton(getString(R.string.yes)) { _, _ ->
+                deleteNote()
+            }
+            .show()
+    }
+
+    /**
+     * Deletes the current note and navigates to the list fragment.
+     */
+    private fun deleteNote() {
+        viewModel.deleteNote(note)
+        findNavController().navigateUp()
     }
 
     /**
@@ -113,21 +162,26 @@ class AddNoteFragment : Fragment() {
                 note = selectedNote
                 bind(note)
             }
-        } else {
-            binding.saveAction.setOnClickListener {
-                addNewNote()
-            }
         }
+
+        binding.noteText.requestFocus()
+        val inputMethodManager = context?.getSystemService(INPUT_METHOD_SERVICE) as InputMethodManager
+        inputMethodManager.showSoftInput(binding.noteText, SHOW_IMPLICIT)
     }
 
     /**
      * Called before fragment is destroyed.
      */
     override fun onDestroyView() {
+        if(this::note.isInitialized)
+            updateNote()
+        else
+            addNewNote()
+
         super.onDestroyView()
+
         // Hide keyboard.
-        val inputMethodManager = requireActivity().getSystemService(INPUT_METHOD_SERVICE) as
-                InputMethodManager
+        val inputMethodManager = requireActivity().getSystemService(INPUT_METHOD_SERVICE) as InputMethodManager
         inputMethodManager.hideSoftInputFromWindow(requireActivity().currentFocus?.windowToken, 0)
         _binding = null
     }

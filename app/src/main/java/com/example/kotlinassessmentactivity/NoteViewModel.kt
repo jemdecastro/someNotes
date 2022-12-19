@@ -21,7 +21,7 @@ class NoteViewModel(private val NoteDao: NoteDao) : ViewModel() {
      * Updates an existing Note in the database.
      */
     fun updateNote(
-        NoteId: Int,
+        NoteId: Long,
         NoteTitle: String,
         NoteText: String,
         NoteUpdateAt: Long
@@ -41,18 +41,12 @@ class NoteViewModel(private val NoteDao: NoteDao) : ViewModel() {
 
     /**
      * Inserts the new Note into database.
-     */
-    fun addNewNote(NoteTitle: String, NoteText: String, NoteUpdateAt: Long) {
-        val newNote = getNewNoteEntry(NoteTitle, NoteText, NoteUpdateAt)
-        insertNote(newNote)
-    }
-
-    /**
      * Launching a new coroutine to insert a Note in a non-blocking way
      */
-    private fun insertNote(Note: Note) {
+    fun addNewNote(noteTitle: String, noteText: String, noteUpdateAt: Long) {
+        val newNote = getNewNoteEntry(noteTitle, noteText, noteUpdateAt)
         viewModelScope.launch {
-            NoteDao.insert(Note)
+            NoteDao.insert(newNote)
         }
     }
 
@@ -68,7 +62,7 @@ class NoteViewModel(private val NoteDao: NoteDao) : ViewModel() {
     /**
      * Retrieve a Note from the repository.
      */
-    fun retrieveNote(id: Int): LiveData<Note> {
+    fun retrieveNote(id: Long): LiveData<Note> {
         return NoteDao.getNote(id).asLiveData()
     }
 
@@ -76,7 +70,7 @@ class NoteViewModel(private val NoteDao: NoteDao) : ViewModel() {
      * Returns true if the Values are valid
      */
     fun isEntryValid(NoteTitle: String, NoteText: String, NoteUpdateAt: Long): Boolean {
-        if (NoteTitle.isBlank() || NoteText.isBlank() || NoteUpdateAt==0L) {
+        if ( ( NoteTitle.isBlank() && NoteText.isBlank() ) || NoteUpdateAt==0L) {
             return false
         }
         return true
@@ -99,7 +93,7 @@ class NoteViewModel(private val NoteDao: NoteDao) : ViewModel() {
      * Returns an instance of the [Note] entity class with the Note info updated by the user.
      */
     private fun getUpdatedNoteEntry(
-        NoteId: Int,
+        NoteId: Long,
         NoteTitle: String,
         NoteText: String,
         NoteUpdateAt: Long

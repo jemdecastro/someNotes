@@ -1,13 +1,13 @@
 <resources>
     <string name="app_name">Some Notes</string>
-    <string name="note_title_req">Title <font color='#FF0000'>*</font></string>
-    <string name="note_text_req">Note <font color='#FF0000'>*</font></string>
+    <string name="note_title_req">Title</string>
+    <string name="note_text_req">Note</string>
     <string name="save_action">Save</string>
     <string name="note_detail_fragment_title">Note Details</string>
     <string name="add_fragment_title">Add Note</string>
     <string name="edit_fragment_title">Edit Note</string>
     <string name="note_text">Note</string>
-    <string name="last_update">Updated</string>
+    <string name="last_update">Last Update:</string>
     <string name="note_title">Title</string>
     <string name="delete">Delete</string>
     <string name="delete_question">Are you sure you want to delete?</string>

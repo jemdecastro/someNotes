@@ -19,7 +19,7 @@ interface NoteDao {
     fun getNotes(): Flow<List<Note>>
 
     @Query("SELECT * from note WHERE id = :id")
-    fun getNote(id: Int): Flow<Note>
+    fun getNote(id: Long): Flow<Note>
 
     // Specify the conflict strategy as IGNORE, when the user tries to add an
     // existing Note into the database Room ignores the conflict.

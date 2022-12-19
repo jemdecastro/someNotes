@@ -12,7 +12,7 @@ import java.util.*
 @Entity
 data class Note(
     @PrimaryKey(autoGenerate = true)
-    val id: Int = 0,
+    val id: Long = 0L,
 
     @ColumnInfo(name = "noteTitle")
     val noteTitle: String,

@@ -30,7 +30,7 @@
         <com.google.android.material.textfield.TextInputLayout
             android:id="@+id/note_text_label"
             android:layout_width="0dp"
-            android:layout_height="wrap_content"
+            android:layout_height="match_parent"
             android:layout_marginTop="@dimen/margin"
             android:hint="@string/note_text_req"
             app:layout_constraintEnd_toEndOf="parent"
@@ -42,19 +42,51 @@
                 android:id="@+id/note_text"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:inputType="textAutoComplete|textCapWords"
-                android:singleLine="true" />
+                android:gravity="top"
+                android:minLines="10"
+                android:maxLines="20"
+                android:inputType="textMultiLine|textAutoComplete|textCapWords"
+                />
         </com.google.android.material.textfield.TextInputLayout>
 
-        <Button
-            android:id="@+id/save_action"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="32dp"
-            android:text="@string/save_action"
-            app:layout_constraintEnd_toEndOf="parent"
+        <TextView
+            android:id="@+id/note_update_at_label"
+            style="@style/Widget.Note.TextView"
+            android:layout_alignParentEnd="true"
+            android:layout_marginHorizontal="@dimen/margin_between_elements"
+            android:text="@string/last_update"
+            android:textSize="11sp"
+            app:layout_constraintHorizontal_weight="1"
             app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toStartOf="@+id/note_update_at"
+            android:textAlignment="textEnd"
             app:layout_constraintTop_toBottomOf="@+id/note_text_label" />
+
+        <TextView
+            android:id="@+id/note_update_at"
+            style="@style/Widget.Note.TextView"
+            android:layout_alignParentEnd="true"
+            android:layout_marginHorizontal="@dimen/margin_between_elements"
+            android:text="@string/last_update"
+            android:textSize="11sp"
+            app:layout_constraintHorizontal_weight="1"
+            app:layout_constraintStart_toEndOf="@+id/note_update_at_label"
+            app:layout_constraintEnd_toEndOf="parent"
+            android:textAlignment="textStart"
+            app:layout_constraintTop_toBottomOf="@+id/note_text_label" />
+
+        <com.google.android.material.floatingactionbutton.FloatingActionButton
+            android:id="@+id/floatingDeleteButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="@dimen/margin_between_elements"
+            android:contentDescription="@string/delete"
+            android:src="@android:drawable/ic_menu_delete"
+            app:layout_constraintTop_toBottomOf="@+id/note_update_at"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            android:visibility="gone"
+            android:backgroundTint="@android:color/holo_orange_light" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 </ScrollView>
