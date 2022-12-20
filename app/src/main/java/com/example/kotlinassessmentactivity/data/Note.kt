@@ -1,5 +1,6 @@
 package com.example.kotlinassessmentactivity.data
 
+import android.text.format.DateUtils
 import androidx.room.ColumnInfo
 import androidx.room.Entity
 import androidx.room.PrimaryKey
@@ -29,8 +30,14 @@ data class Note(
  */
 fun Note.getDateTime(): String {
     return try {
-        val sdf = SimpleDateFormat("MMM dd yyyy, h:mm:ss a", Locale.ENGLISH)
-        sdf.format(Date(noteUpdateAt))
+        // Check if today, display getRelativeTimeSpanString(long ms), for example "42 minutes ago"
+        if(DateUtils.isToday(noteUpdateAt))
+            DateUtils.getRelativeTimeSpanString(noteUpdateAt).toString()
+        else {
+            // Else display a formatted datetime
+            val sdf = SimpleDateFormat("MMM dd yyyy, h:mm:ss a", Locale.ENGLISH)
+            sdf.format(Date(noteUpdateAt))
+        }
     } catch (e: Exception) {
         ""
     }
