@@ -69,7 +69,6 @@ class AddNoteFragment : Fragment() {
         binding.apply {
             noteTitle.setText(note.noteTitle, TextView.BufferType.SPANNABLE)
             noteText.setText(note.noteText, TextView.BufferType.SPANNABLE)
-//            saveAction.setOnClickListener { updateNote() }
             floatingDeleteButton.visibility = VISIBLE
             floatingDeleteButton.setOnClickListener { showConfirmationDialog() }
 
@@ -103,12 +102,11 @@ class AddNoteFragment : Fragment() {
      * Updates an existing Note in the database and navigates up to list fragment.
      */
     private fun updateNote() {
+        // Check if the title or note are deleted
         if (isEntryValid()) {
             // Check if there are changes from title or text
-            if( note.noteTitle == binding.noteTitle.text.toString() &&
-                note.noteText == binding.noteText.text.toString() ) {
-//                Toast.makeText(context,"No changes made",Toast.LENGTH_SHORT).show()
-            } else {
+            if( note.noteTitle != binding.noteTitle.text.toString() ||
+                note.noteText != binding.noteText.text.toString() ) {
                 viewModel.updateNote(
                     note.id,
                     binding.noteTitle.text.toString(),
@@ -165,6 +163,7 @@ class AddNoteFragment : Fragment() {
             }
         }
 
+        // Focus and Show soft keyboard
         binding.noteText.requestFocus()
         val inputMethodManager = context?.getSystemService(INPUT_METHOD_SERVICE) as InputMethodManager
         inputMethodManager.showSoftInput(binding.noteText, SHOW_IMPLICIT)
@@ -174,6 +173,7 @@ class AddNoteFragment : Fragment() {
      * Called before fragment is destroyed.
      */
     override fun onDestroyView() {
+        // Before destroy of view, update or add the note
         if(this::note.isInitialized)
             updateNote()
         else

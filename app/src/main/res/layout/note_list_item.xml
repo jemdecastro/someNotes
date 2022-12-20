@@ -53,14 +53,6 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/note_title" />
 
-        <!--    <View-->
-        <!--        android:id="@+id/divider"-->
-        <!--        style="@style/Divider"-->
-        <!--        android:layout_margin="@dimen/margin_between_elements"-->
-        <!--        app:layout_constraintTop_toBottomOf="@+id/note_text"-->
-        <!--        app:layout_constraintEnd_toEndOf="parent"-->
-        <!--        app:layout_constraintStart_toStartOf="parent" />-->
-
     </androidx.constraintlayout.widget.ConstraintLayout>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

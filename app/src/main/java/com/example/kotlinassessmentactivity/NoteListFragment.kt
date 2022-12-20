@@ -3,6 +3,8 @@ package com.example.kotlinassessmentactivity
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
+import android.view.View.GONE
+import android.view.View.VISIBLE
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
@@ -41,11 +43,6 @@ class NoteListFragment : Fragment() {
                 it.id
             )
             this.findNavController().navigate(action)
-//
-//            val action = NoteListFragmentDirections.actionNoteListFragmentToNoteDetailFragment(
-//                it.id
-//            )
-//            this.findNavController().navigate(action)
         }
         binding.recyclerView.layoutManager = GridLayoutManager(this.context, 2)
 
@@ -56,6 +53,11 @@ class NoteListFragment : Fragment() {
             notes.let {
                 adapter.submitList(it)
             }
+
+            if(notes.isEmpty())
+                binding.noNotesYet.visibility = VISIBLE
+            else
+                binding.noNotesYet.visibility = GONE
         }
 
         binding.floatingActionButton.setOnClickListener {

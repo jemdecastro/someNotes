@@ -39,6 +39,7 @@ class NoteListAdapter(private val onNoteClicked: (Note) -> Unit) :
         RecyclerView.ViewHolder(binding.root) {
 
         fun bind(note: Note) {
+            // Hide the Title and Text if empty
             if(note.noteTitle.isEmpty())
                 binding.noteTitle.visibility = GONE
 
