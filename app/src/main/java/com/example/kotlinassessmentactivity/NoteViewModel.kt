@@ -12,30 +12,30 @@ import kotlinx.coroutines.launch
 /**
  * View Model to keep a reference to the Note repository and an up-to-date list of all Notes.
  */
-class NoteViewModel(private val NoteDao: NoteDao) : ViewModel() {
+class NoteViewModel(private val noteDao: NoteDao) : ViewModel() {
 
     // Cache all Notes from the database using LiveData.
-    val allNotes: LiveData<List<Note>> = NoteDao.getNotes().asLiveData()
+    val allNotes: LiveData<List<Note>> = noteDao.getNotes().asLiveData()
 
     /**
      * Updates an existing Note in the database.
      */
     fun updateNote(
-        NoteId: Long,
-        NoteTitle: String,
-        NoteText: String,
-        NoteUpdateAt: Long
+        noteId: Long,
+        noteTitle: String,
+        noteText: String,
+        noteUpdateAt: Long
     ) {
-        val updatedNote = getUpdatedNoteEntry(NoteId, NoteTitle, NoteText, NoteUpdateAt)
+        val updatedNote = getUpdatedNoteEntry(noteId, noteTitle, noteText, noteUpdateAt)
         updateNote(updatedNote)
     }
 
     /**
      * Launching a new coroutine to update a Note in a non-blocking way
      */
-    private fun updateNote(Note: Note) {
+    private fun updateNote(note: Note) {
         viewModelScope.launch {
-            NoteDao.update(Note)
+            noteDao.update(note)
         }
     }
 
@@ -46,16 +46,16 @@ class NoteViewModel(private val NoteDao: NoteDao) : ViewModel() {
     fun addNewNote(noteTitle: String, noteText: String, noteUpdateAt: Long) {
         val newNote = getNewNoteEntry(noteTitle, noteText, noteUpdateAt)
         viewModelScope.launch {
-            NoteDao.insert(newNote)
+            noteDao.insert(newNote)
         }
     }
 
     /**
      * Launching a new coroutine to delete a Note in a non-blocking way
      */
-    fun deleteNote(Note: Note) {
+    fun deleteNote(note: Note) {
         viewModelScope.launch {
-            NoteDao.delete(Note)
+            noteDao.delete(note)
         }
     }
 
@@ -63,14 +63,14 @@ class NoteViewModel(private val NoteDao: NoteDao) : ViewModel() {
      * Retrieve a Note from the repository.
      */
     fun retrieveNote(id: Long): LiveData<Note> {
-        return NoteDao.getNote(id).asLiveData()
+        return noteDao.getNote(id).asLiveData()
     }
 
     /**
      * Returns true if the Values are valid
      */
-    fun isEntryValid(NoteTitle: String, NoteText: String, NoteUpdateAt: Long): Boolean {
-        if ( ( NoteTitle.isBlank() && NoteText.isBlank() ) || NoteUpdateAt==0L) {
+    fun isEntryValid(noteTitle: String, noteText: String, noteUpdateAt: Long): Boolean {
+        if ( ( noteTitle.isBlank() && noteText.isBlank() ) || noteUpdateAt==0L) {
             return false
         }
         return true
@@ -80,11 +80,11 @@ class NoteViewModel(private val NoteDao: NoteDao) : ViewModel() {
      * Returns an instance of the [Note] entity class with the Note info entered by the user.
      * This will be used to add a new entry to the Note database.
      */
-    private fun getNewNoteEntry(NoteTitle: String, NoteText: String, NoteUpdateAt: Long): Note {
+    private fun getNewNoteEntry(noteTitle: String, noteText: String, noteUpdateAt: Long): Note {
         return Note(
-            noteTitle = NoteTitle,
-            noteText = NoteText,
-            noteUpdateAt = NoteUpdateAt
+            noteTitle = noteTitle,
+            noteText = noteText,
+            noteUpdateAt = noteUpdateAt
         )
     }
 
@@ -93,16 +93,16 @@ class NoteViewModel(private val NoteDao: NoteDao) : ViewModel() {
      * Returns an instance of the [Note] entity class with the Note info updated by the user.
      */
     private fun getUpdatedNoteEntry(
-        NoteId: Long,
-        NoteTitle: String,
-        NoteText: String,
-        NoteUpdateAt: Long
+        noteId: Long,
+        noteTitle: String,
+        noteText: String,
+        noteUpdateAt: Long
     ): Note {
         return Note(
-            id = NoteId,
-            noteTitle = NoteTitle,
-            noteText = NoteText,
-            noteUpdateAt = NoteUpdateAt
+            id = noteId,
+            noteTitle = noteTitle,
+            noteText = noteText,
+            noteUpdateAt = noteUpdateAt
         )
     }
 }
@@ -110,11 +110,11 @@ class NoteViewModel(private val NoteDao: NoteDao) : ViewModel() {
 /**
  * Factory class to instantiate the [ViewModel] instance.
  */
-class NoteViewModelFactory(private val NoteDao: NoteDao) : ViewModelProvider.Factory {
+class NoteViewModelFactory(private val noteDao: NoteDao) : ViewModelProvider.Factory {
     override fun <T : ViewModel> create(modelClass: Class<T>): T {
         if (modelClass.isAssignableFrom(NoteViewModel::class.java)) {
             @Suppress("UNCHECKED_CAST")
-            return NoteViewModel(NoteDao) as T
+            return NoteViewModel(noteDao) as T
         }
         throw IllegalArgumentException("Unknown ViewModel class")
     }
