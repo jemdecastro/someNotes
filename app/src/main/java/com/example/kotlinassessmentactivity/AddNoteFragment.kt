@@ -4,10 +4,10 @@ import android.content.Context.INPUT_METHOD_SERVICE
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
+import android.view.View.GONE
 import android.view.View.VISIBLE
 import android.view.ViewGroup
 import android.view.inputmethod.InputMethodManager
-import android.view.inputmethod.InputMethodManager.SHOW_FORCED
 import android.view.inputmethod.InputMethodManager.SHOW_IMPLICIT
 import android.widget.TextView
 import android.widget.Toast
@@ -69,7 +69,7 @@ class AddNoteFragment : Fragment() {
         binding.apply {
             noteTitle.setText(note.noteTitle, TextView.BufferType.SPANNABLE)
             noteText.setText(note.noteText, TextView.BufferType.SPANNABLE)
-            floatingDeleteButton.visibility = VISIBLE
+
             floatingDeleteButton.setOnClickListener { showConfirmationDialog() }
 
             noteUpdateAtLabel.visibility = VISIBLE
@@ -157,10 +157,13 @@ class AddNoteFragment : Fragment() {
 
         val id = navigationArgs.noteId
         if (id > 0) {
+            binding.floatingDeleteButton.visibility = VISIBLE
             viewModel.retrieveNote(id).observe(this.viewLifecycleOwner) { selectedNote ->
                 note = selectedNote
                 bind(note)
             }
+        } else {
+            binding.floatingDeleteButton.visibility = GONE
         }
 
         // Focus and Show soft keyboard

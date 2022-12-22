@@ -60,7 +60,7 @@ class NoteListFragment : Fragment() {
                 binding.noNotesYet.visibility = GONE
         }
 
-        binding.floatingActionButton.setOnClickListener {
+        binding.floatingAddButton.setOnClickListener {
             val action = NoteListFragmentDirections.actionNoteListFragmentToAddNoteFragment(
                 getString(R.string.add_fragment_title)
             )
